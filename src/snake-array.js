@@ -27,32 +27,53 @@ var DIR = {
  */
 function move (snake, lastDir, newDir, w, h) {
   var N = snake.length;
+  var next;
 
   newDir = newDir || lastDir;
 
   switch (newDir) {
     case DIR.right:
       snake.map(function (x) {
-        if (!(w && h))
-          return x[0]++;
-
-        var next = x[0] + 1;
+        next = x[0] + 1;
 
         if (next >= w)
           return x[0] = 0;
+        else
+          return x[0] = next;
       });
       break;
 
     case DIR.left:
-      snake.map(function (x) { return x[0]--;});
+      snake.map(function (x) {
+        next = x[0] - 1;
+
+        if (next < 0)
+          return x[0] = w - 1;
+        else
+          return x[0] = next;
+      });
       break;
 
     case DIR.down:
-      snake.map(function (x) { return x[1]++;});
+      snake.map(function (x) {
+        next = x[1] + 1;
+
+        if (next < h)
+          return x[1] = next;
+        else
+          return x[1] = 0;
+      });
       break;
 
     case DIR.up:
-      snake.map(function (x) { return x[1]--;});
+      snake.map(function (x) {
+        next = x[1] - 1;
+
+        if (next < 0)
+          return x[1] = h - 1;
+        else
+          return x[1] = next;
+      });
       break;
     }
 
