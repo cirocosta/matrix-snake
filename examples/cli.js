@@ -4,9 +4,14 @@
 
 var SnakeGame = require('../src/snake-game');
 var DIR = require('../src/snake-array').DIR;
-var game = SnakeGame.prepare(5,5);
+var cbObj = new SnakeGame.CbObj();
 var matrix;
 
+setInterval(function () {
+  cbObj.emitDir(['up', 'left','right', 'down'][Math.random() * 4 | 0]);
+}, 1500);
+
+var game = SnakeGame.prepare(5,5, cbObj);
 
 setInterval(function () {
   matrix = game.next();
