@@ -18,6 +18,8 @@ var DIR = {
   down: 'down'
 };
 
+var CRASH = 'CRASHHHH!';
+
 /**
  * Given a snake and a direction, computs the
  * next one
@@ -136,5 +138,6 @@ function stampSnakeInMatrix (snake, matrix) {
 
 module.exports = {
   move: move,
-  DIR: DIR
+  DIR: DIR,
+  CRASH: CRASH
 };
