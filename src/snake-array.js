@@ -69,6 +69,22 @@ function getNext (node, lastDir, newDir, w, h) {
   return node;
 }
 
+function arraysEqual(arr1, arr2) {
+    if(arr1.length !== arr2.length)
+        return false;
+    for(var i = arr1.length; i--;)
+      if(arr1[i] !== arr2[i])
+        return false;
+
+  return true;
+}
+
+function arrayIn (node, array) {
+  return array.some(function (elem) {
+    return arraysEqual(node, elem) ? true : false;
+  });
+}
+
 /**
  * Given a snake and a direction, computs the
  * next one
@@ -86,7 +102,7 @@ function move (snake, lastDir, newDir, w, h) {
 
     next = getNext(Array.prototype.slice.call(node), lastDir, newDir, w, h);
 
-    if (~snake.indexOf(next))
+    if (arrayIn(next, snake))
       return CRASH;
 
     return next;
