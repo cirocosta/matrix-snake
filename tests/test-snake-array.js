@@ -121,5 +121,6 @@ describe('snake', function() {
         assert.deepEqual(snake, [[1,0], [2,0], [2,1]]);
       });
     });
+
   });
 });

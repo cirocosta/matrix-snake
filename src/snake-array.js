@@ -20,6 +20,55 @@ var DIR = {
 
 var CRASH = 'CRASHHHH!';
 
+function getNext (node, lastDir, newDir, w, h) {
+  var next;
+
+  newDir = newDir || lastDir;
+
+  switch (newDir) {
+    case DIR.right:
+      next = node[0] + 1;
+
+      if (next >= w)
+        node[0] = 0;
+      else
+        node[0] = next;
+      break;
+
+    case DIR.left:
+      next = node[0] - 1;
+
+      if (next < 0)
+        node[0] = w - 1;
+      else
+        node[0] = next;
+      break;
+
+    case DIR.down:
+      next = node[1] + 1;
+
+      if (next < h)
+        node[1] = next;
+      else
+        node[1] = 0;
+      break;
+
+    case DIR.up:
+      next = node[1] - 1;
+
+      if (next < 0)
+        node[1] = h - 1;
+      else
+        node[1] = next;
+      break;
+
+    default:
+      throw new Error(newDir + ' direction is not supported.');
+  }
+
+  return node;
+}
+
 /**
  * Given a snake and a direction, computs the
  * next one
@@ -31,55 +80,17 @@ function move (snake, lastDir, newDir, w, h) {
   var N = snake.length;
   var next;
 
-  newDir = newDir || lastDir;
+  return snake.map(function (node, i, arr) {
+    if (snake[i+1])
+      return snake[i+1];
 
-  switch (newDir) {
-    case DIR.right:
-      snake.map(function (x) {
-        next = x[0] + 1;
+    next = getNext(Array.prototype.slice.call(node), lastDir, newDir, w, h);
 
-        if (next >= w)
-          return x[0] = 0;
-        else
-          return x[0] = next;
-      });
-      break;
+    if (~snake.indexOf(next))
+      return CRASH;
 
-    case DIR.left:
-      snake.map(function (x) {
-        next = x[0] - 1;
-
-        if (next < 0)
-          return x[0] = w - 1;
-        else
-          return x[0] = next;
-      });
-      break;
-
-    case DIR.down:
-      snake.map(function (x) {
-        next = x[1] + 1;
-
-        if (next < h)
-          return x[1] = next;
-        else
-          return x[1] = 0;
-      });
-      break;
-
-    case DIR.up:
-      snake.map(function (x) {
-        next = x[1] - 1;
-
-        if (next < 0)
-          return x[1] = h - 1;
-        else
-          return x[1] = next;
-      });
-      break;
-    }
-
-  return snake;
+    return next;
+  });
 }
 
 /**
@@ -138,6 +149,7 @@ function stampSnakeInMatrix (snake, matrix) {
 
 module.exports = {
   move: move,
+  getNext: getNext,
   DIR: DIR,
   CRASH: CRASH
 };
