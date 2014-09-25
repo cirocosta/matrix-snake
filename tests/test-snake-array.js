@@ -125,7 +125,7 @@ describe('snake', function() {
         var snake = [[0,0], [1,0], [2,0], [2,1], [1,1]];
 
         snake = move(snake, null, DIR.up, 3, 3);
-        assert.deepEqual(snake, [[1,0],[2,0],[2,1],[1,1],"CRASHHHH!"]);
+        assert.deepEqual(snake, [[1,0],[2,0],[2,1],[1,1],Snake.CRASH]);
       });
     });
   });

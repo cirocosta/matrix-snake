@@ -1,7 +1,29 @@
 'use strict';
 
+/** In our case, Snake is represented as a array
+ * of arrays.
+ *
+ * Snake: ---[(i,j)]-[(i,j)]-[(i,j)]--:>
+ *
+ * For each array inside the Snake element, the
+ * first element will correspond to the X and
+ * the second to the Y coordinate, having the
+ * (0,0) point fixed at the upper left of the
+ * matrix that represents our coordinate system.
+ *
+ * One might notice that this is different from
+ * the matrix representation that we generally
+ * take in javascript, where the second element
+ * in the array represents horizontal move in a
+ * matrix and the first the vertical. For
+ * converting snake notation to the convetional
+ * we just have to swap the indexes (see
+ * stampOnMatrix method).
+ */
+
+
 /**
- * Snake:  ---[(i,j)]-[(i,j)]-[(i,j)]--:>
+ * Constants
  */
 
 var OPPOSE = {
@@ -10,31 +32,31 @@ var OPPOSE = {
   left: 'right',
   right: 'left'
 };
-
 var DIR = {
   right: 'right',
   up: 'up',
   left: 'left',
   down: 'down'
 };
-
 var CRASH = 'CRASHHHH!';
+
+/**
+ * Private
+ */
 
 var _slice = Function.prototype.call.bind(Array.prototype.slice);
 
-function genMatrix (w, h) {
-  var matrix = [];
-  var row = [];
-
-  while (w--)
-    row.push(0);
-
-  while (h--)
-    matrix.push(_slice(row));
-
-  return matrix;
-}
-
+/**
+ * Given the last direction and the new
+ * direction (+ matrix width and height), get
+ * the coordinates of the next position.
+ * @param  {array} node
+ * @param  {DIR} lastDir
+ * @param  {DIR} newDir
+ * @param  {number} w
+ * @param  {number} h
+ * @return {array}
+ */
 function _getNext (node, lastDir, newDir, w, h) {
   var next;
 
@@ -84,6 +106,12 @@ function _getNext (node, lastDir, newDir, w, h) {
   return node;
 }
 
+/**
+ * Deeply compares two arrays
+ * @param  {array} arr1
+ * @param  {array} arr2
+ * @return {bool}
+ */
 function _arraysEqual(arr1, arr2) {
     if(arr1.length !== arr2.length)
         return false;
@@ -101,8 +129,32 @@ function _arrayIn (node, array) {
 }
 
 /**
+ * Public
+ */
+
+
+/**
+ * Generates a matrix given Width and Height
+ * @param  {number} w
+ * @param  {number} h
+ * @return {array}
+ */
+function genMatrix (w, h) {
+  var matrix = [];
+  var row = [];
+
+  while (w--)
+    row.push(0);
+
+  while (h--)
+    matrix.push(_slice(row));
+
+  return matrix;
+}
+
+/**
  * Given a snake and a direction, computs the
- * next one
+ * next representation of the snake. (immutable).
  * @param  {array} snake
  * @param  {string} lastDir
  * @param  {string} newDir
@@ -125,62 +177,28 @@ function move (snake, lastDir, newDir, w, h) {
 }
 
 /**
- * Stamps the snake on the matrix (mutating it).
+ * Stamps the snake on the matrix.
  * It assumes that snake will fit into the
- * matrix.
- * @param  {[type]} snake  [description]
- * @param  {[type]} matrix [description]
- * @return {[type]}        [description]
+ * matrix. (Immutable).
+ * @param  {[type]} snake
+ * @param  {[type]} matrix
+ * @return {[type]}
  */
 function stampOnMatrix (snake, matrix) {
-  for (var key in snake)
-    matrix[snake[key][1]][snake[key][0]] = 1;
+  var newMatrix = JSON.parse(JSON.stringify(matrix));
 
-  return matrix;
+  for (var key in snake)
+    newMatrix[snake[key][1]][snake[key][0]] = 1;
+
+  return newMatrix;
 }
 
-/**
- * Main execution loop. Holds state and logic
- * for processing moves.
- */
-// function MainLoop (w, h) {
-//   var matrix = [];
-//   var snake = [];
-//   var dir;
-//   var arr;
-
-//   for (var i = 0; i < h; i++) {
-//     arr = [];
-//     for (var j = 0; j < w; j++)
-//       arr.push(0);
-//     matrix.push(arr);
-//   }
-
-//   snake.push([(Math.random() * w-1 | 0) + 1, (Math.random() * h-1 | 0) + 1]);
-//   dir = ['up', 'down', 'left', 'right'][Math.random() * 4 | 0];
-
-
-//   return {
-//     next: function (newDir) {
-//       move(snake, dir, newDir, 10, 10);
-//       return stampOnMatrix(matrix, snake);
-//     }
-//   };
-// }
-
-/**
- * Bind the loop caller to the interval (might
- * be rAF ... sI ... whatever)
- */
-// var game = MainLoop(10, 10);
-// setInterval(function () {
-//   console.log(game.next('up'));
-// }, 500);
 
 module.exports = {
+  DIR: DIR,
+  CRASH: CRASH,
+
   genMatrix: genMatrix,
   stampOnMatrix: stampOnMatrix,
-  move: move,
-  DIR: DIR,
-  CRASH: CRASH
+  move: move
 };
