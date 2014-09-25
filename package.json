@@ -1,13 +1,13 @@
 {
   "name": "matrix-snake",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "Snake Game in a Javascript Matrix",
+  "main": "./src/snake-game.js",
   "scripts": {
     "test": "mocha ./tests"
   },
-  "author": "Ciro S. Costa <ciro9758@gmail.com> (http://www.cirocosta.com/)",
-  "license": "ISC",
+  "author": "Ciro S. Costa <ciro9758@gmail.com> (http://cirocosta.github.io/)",
+  "license": "MIT",
   "devDependencies": {
     "mocha": "^1.21.4"
   }

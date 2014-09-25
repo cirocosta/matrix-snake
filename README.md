@@ -1,6 +1,6 @@
 # matrix-snake
 
-> Play snake in a Javascript Matrix!
+> Play Snake Game in a Javascript Matrix!
 
 ## Example
 
