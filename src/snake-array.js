@@ -20,7 +20,22 @@ var DIR = {
 
 var CRASH = 'CRASHHHH!';
 
-function getNext (node, lastDir, newDir, w, h) {
+var _slice = Function.prototype.call.bind(Array.prototype.slice);
+
+function genMatrix (w, h) {
+  var matrix = [];
+  var row = [];
+
+  while (w--)
+    row.push(0);
+
+  while (h--)
+    matrix.push(_slice(row));
+
+  return matrix;
+}
+
+function _getNext (node, lastDir, newDir, w, h) {
   var next;
 
   newDir = newDir || lastDir;
@@ -69,7 +84,7 @@ function getNext (node, lastDir, newDir, w, h) {
   return node;
 }
 
-function arraysEqual(arr1, arr2) {
+function _arraysEqual(arr1, arr2) {
     if(arr1.length !== arr2.length)
         return false;
     for(var i = arr1.length; i--;)
@@ -79,9 +94,9 @@ function arraysEqual(arr1, arr2) {
   return true;
 }
 
-function arrayIn (node, array) {
+function _arrayIn (node, array) {
   return array.some(function (elem) {
-    return arraysEqual(node, elem) ? true : false;
+    return _arraysEqual(node, elem) ? true : false;
   });
 }
 
@@ -100,9 +115,9 @@ function move (snake, lastDir, newDir, w, h) {
     if (snake[i+1])
       return snake[i+1];
 
-    next = getNext(Array.prototype.slice.call(node), lastDir, newDir, w, h);
+    next = _getNext(_slice(node), lastDir, newDir, w, h);
 
-    if (arrayIn(next, snake))
+    if (_arrayIn(next, snake))
       return CRASH;
 
     return next;
@@ -110,17 +125,16 @@ function move (snake, lastDir, newDir, w, h) {
 }
 
 /**
- * Stamps the snake on the matrix (mutating it)
+ * Stamps the snake on the matrix (mutating it).
+ * It assumes that snake will fit into the
+ * matrix.
  * @param  {[type]} snake  [description]
  * @param  {[type]} matrix [description]
  * @return {[type]}        [description]
  */
-function stampSnakeInMatrix (snake, matrix) {
-  var w = matrix[0].length;
-  var h = matrix.length;
-
+function stampOnMatrix (snake, matrix) {
   for (var key in snake)
-    matrix[snake[key][0]][snake[key][0]] = 1;
+    matrix[snake[key][1]][snake[key][0]] = 1;
 
   return matrix;
 }
@@ -149,7 +163,7 @@ function stampSnakeInMatrix (snake, matrix) {
 //   return {
 //     next: function (newDir) {
 //       move(snake, dir, newDir, 10, 10);
-//       return stampSnakeInMatrix(matrix, snake);
+//       return stampOnMatrix(matrix, snake);
 //     }
 //   };
 // }
@@ -164,8 +178,9 @@ function stampSnakeInMatrix (snake, matrix) {
 // }, 500);
 
 module.exports = {
+  genMatrix: genMatrix,
+  stampOnMatrix: stampOnMatrix,
   move: move,
-  getNext: getNext,
   DIR: DIR,
   CRASH: CRASH
 };

@@ -128,6 +128,47 @@ describe('snake', function() {
         assert.deepEqual(snake, [[1,0],[2,0],[2,1],[1,1],"CRASHHHH!"]);
       });
     });
-
   });
+
+  describe('genMatrix', function() {
+    it('generate matrices', function() {
+      var actual = Snake.genMatrix(3,3);
+      var expected = [
+        [0,0,0],
+        [0,0,0],
+        [0,0,0],
+      ];
+
+      assert.deepEqual(actual, expected);
+    });
+  });
+
+  describe('.stampOnMatrix', function() {
+    it('stamp a single node', function() {
+      var snake = [[1,1]];
+      var matrix = Snake.genMatrix(3,3);
+      var actual = Snake.stampOnMatrix(snake, matrix);
+      var expected = [
+        [0,0,0],
+        [0,1,0],
+        [0,0,0],
+      ];
+
+      assert.deepEqual(actual, expected);
+    });
+
+    it('stamp multi-node snake', function() {
+      var snake = [[0,0], [1,0], [2,0], [2,1]];
+      var matrix = Snake.genMatrix(3,3);
+      var actual = Snake.stampOnMatrix(snake, matrix);
+      var expected = [
+        [1,1,1],
+        [0,0,1],
+        [0,0,0],
+      ];
+
+      assert.deepEqual(actual, expected);
+    });
+  });
+
 });
