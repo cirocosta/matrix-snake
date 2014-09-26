@@ -18,6 +18,7 @@
 
 var Snake = require('./snake-array');
 var EventEmitter = require('events').EventEmitter;
+var genMatrix = require('./utils').genMatrix;
 var inherits = require('util').inherits;
 
 var DIR = Snake.DIR;
@@ -65,7 +66,7 @@ function _randomCoord (w, h) {
  * @param {Function} onCrash [description]
  */
 function prepare (w, h, cbObj, onFruitEaten, onCrash) {
-  var _INITIAL_MATRIX = Snake.genMatrix(w, h);
+  var _INITIAL_MATRIX = genMatrix(w, h);
   var _snake = [[(Math.random() * w-1 | 0) + 1,
                 (Math.random() * h-1 | 0) + 1]];
   var _fruit = _randomCoord(w, h);
@@ -80,15 +81,17 @@ function prepare (w, h, cbObj, onFruitEaten, onCrash) {
 
   return {
     next: function () {
-      if (crashed)
+      if (_crashed) {
+        _snake[_snake.length - 1] = _crashed;
         return stampOnMatrix(_snake, _INITIAL_MATRIX, _fruit);
+      }
 
       _snake = move(_snake, dir, newDir, w, h, _fruit, function () {
         _fruits++;
         _fruit = _randomCoord(w, h);
         onFruitEaten && onFruitEaten(_fruits);
-      }, function () {
-        crashed = true;
+      }, function (node) {
+        _crashed = node;
         onCrash && onCrash();
       });
       newDir = newDir || dir;

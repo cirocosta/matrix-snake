@@ -130,7 +130,7 @@ function move (snake, lastDir, newDir, w, h, fruit, onFruitEaten, crashCallback)
     next = _getNext(utils.slice(node), lastDir, newDir, w, h);
 
     if (utils.arrayIn(next, snake))
-      return (crashCallback && crashCallback(), CRASH);
+      return (crashCallback && crashCallback(next), next);
 
     if (fruit && utils.arraysEqual(fruit, next))
       (fruitEaten = true, onFruitEaten && onFruitEaten());

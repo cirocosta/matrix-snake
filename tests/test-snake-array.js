@@ -129,14 +129,6 @@ describe('snake', function() {
         snake = move(snake, null, DIR.down, 3, 3);
         assert.deepEqual(snake, [[1,0], [2,0], [2,1]]);
       });
-
-      it('colide in itself and detect the colision', function() {
-        var spyFunc = spy();
-        var snake = [[0,0], [1,0], [2,0], [2,1], [1,1]];
-
-        snake = move(snake, null, DIR.up, 3, 3);
-        assert.deepEqual(snake, [[1,0],[2,0],[2,1],[1,1],Snake.CRASH]);
-      });
     });
 
     describe('when colliding,', function() {
