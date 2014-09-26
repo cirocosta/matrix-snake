@@ -5,6 +5,7 @@
 'use strict';
 
 require('../bower_components/react-matrix/dist/react-matrix.css');
+require('./raf-shim');
 
 var React = require('react/addons');
 var Matrix = require('../bower_components/react-matrix/dist/react-matrix');
@@ -14,9 +15,14 @@ var keymaster = require('keymaster');
 var _fruits = 0;
 var cbObj = new SnakeGame.CbObj();
 
-var handleFruitEat = function (fruits) {
+var handleFruitEat = (fruits) => {
   _fruits = fruits;
 };
+
+var handleCrash = () => {
+  alert('Crash! Press refresh for playing again!');
+}
+
 
 keymaster('w,a,s,d', function (e, obj) {
   switch (obj.shortcut) {
@@ -35,7 +41,7 @@ keymaster('w,a,s,d', function (e, obj) {
   }
 });
 
-var game = SnakeGame.prepare(10, 10, cbObj, handleFruitEat);
+var game = SnakeGame.prepare(10, 10, cbObj, handleFruitEat, handleCrash);
 
 var App = React.createClass({
 
@@ -45,12 +51,17 @@ var App = React.createClass({
     };
   },
 
-  componentDidMount () {
-    setInterval(() => {
+  gameTick () {
+    setTimeout(() => {
       this.setState({
         matrix: game.next()
       });
-    }, 150);
+      requestAnimationFrame(this.gameTick);
+    }, 100);
+  },
+
+  componentDidMount () {
+    this.gameTick();
   },
 
   handleKeyPress () {
