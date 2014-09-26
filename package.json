@@ -1,0 +1,26 @@
+{
+  "name": "matrix-snake",
+  "version": "1.0.0",
+  "description": "GH-PAGES :)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cirocosta/matrix-snake.git"
+  },
+  "author": "Ciro S. Costa <ciro9758@gmail.com> (http://www.cirocosta.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cirocosta/matrix-snake/issues"
+  },
+  "homepage": "https://github.com/cirocosta/matrix-snake",
+  "devDependencies": {
+    "css-loader": "^0.9.0",
+    "jsx-loader": "^0.11.0",
+    "react-tools": "^0.11.2",
+    "sass-loader": "^0.2.0",
+    "style-loader": "^0.8.0",
+    "webpack": "^1.4.2"
+  },
+  "dependencies": {
+    "react": "^0.11.2"
+  }
+}
