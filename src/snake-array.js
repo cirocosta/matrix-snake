@@ -158,12 +158,15 @@ function genMatrix (w, h) {
  * @param  {array} snake
  * @param  {string} lastDir
  * @param  {string} newDir
+ * @param {array} fruit coordinate of the current fruit
  */
-function move (snake, lastDir, newDir, w, h) {
+function move (snake, lastDir, newDir, w, h, fruit, onFruitEaten) {
   var N = snake.length;
   var next;
+  var newSnake;
+  var fruitEaten = false;
 
-  return snake.map(function (node, i, arr) {
+  newSnake = snake.map(function (node, i, arr) {
     if (snake[i+1])
       return snake[i+1];
 
@@ -172,8 +175,16 @@ function move (snake, lastDir, newDir, w, h) {
     if (_arrayIn(next, snake))
       return CRASH;
 
+    if (fruit && _arraysEqual(fruit, next))
+      (fruitEaten = true, onFruitEaten && onFruitEaten());
+
     return next;
   });
+
+  if (fruitEaten)
+    newSnake.unshift(snake[0]);
+
+  return newSnake;
 }
 
 /**
@@ -184,11 +195,12 @@ function move (snake, lastDir, newDir, w, h) {
  * @param  {[type]} matrix
  * @return {[type]}
  */
-function stampOnMatrix (snake, matrix) {
+function stampOnMatrix (snake, matrix, fruit) {
   var newMatrix = JSON.parse(JSON.stringify(matrix));
 
   for (var key in snake)
     newMatrix[snake[key][1]][snake[key][0]] = 1;
+  fruit && (newMatrix[fruit[1]][fruit[0]] = 1);
 
   return newMatrix;
 }
