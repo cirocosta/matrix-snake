@@ -2,12 +2,21 @@
 
 var Snake = require('../src/snake-array');
 var assert = require('assert');
+var utils = require('../src/utils');
 var DIR = Snake.DIR;
 
 describe('snake', function() {
 	it('be defined', function() {
 		assert(!!Snake);
 	});
+
+  function spy () {
+    var count = 0;
+
+    return function () {
+      return count++;
+    };
+  }
 
   describe('.move', function() {
     var move = Snake.move;
@@ -71,7 +80,7 @@ describe('snake', function() {
         snake = move(snake, DIR.right, DIR.right);
         assert.deepEqual(snake, [[2,1], [3,1]]);
 
-        snake = move(snake, DIR.left, DIR.right);
+        snake = move(snake, DIR.right, DIR.left);
         assert.deepEqual(snake, [[3,1], [4,1]]);
       });
 
@@ -122,6 +131,7 @@ describe('snake', function() {
       });
 
       it('colide in itself and detect the colision', function() {
+        var spyFunc = spy();
         var snake = [[0,0], [1,0], [2,0], [2,1], [1,1]];
 
         snake = move(snake, null, DIR.up, 3, 3);
@@ -129,15 +139,17 @@ describe('snake', function() {
       });
     });
 
+    describe('when colliding,', function() {
+      it('call crash callback', function() {
+        var spyFunc = spy();
+        var snake = [[0,0], [1,0], [2,0], [2,1], [1,1]];
+
+        snake = move(snake, null, DIR.up, 3, 3, null, null, spyFunc);
+        assert.equal(spyFunc(), 1);
+      });
+    });
+
     describe('with fruits,', function() {
-      function spy () {
-        var count = 0;
-
-        return function () {
-          return count++;
-        };
-      }
-
       it('call callback when fruit eaten', function() {
         var spyFunc = spy();
         var snake = [[0,0]];
@@ -159,23 +171,10 @@ describe('snake', function() {
     });
   });
 
-  describe('genMatrix', function() {
-    it('generate matrices', function() {
-      var actual = Snake.genMatrix(3,3);
-      var expected = [
-        [0,0,0],
-        [0,0,0],
-        [0,0,0],
-      ];
-
-      assert.deepEqual(actual, expected);
-    });
-  });
-
   describe('.stampOnMatrix', function() {
     it('stamp a single node', function() {
       var snake = [[1,1]];
-      var matrix = Snake.genMatrix(3,3);
+      var matrix = utils.genMatrix(3,3);
       var actual = Snake.stampOnMatrix(snake, matrix);
       var expected = [
         [0,0,0],
@@ -188,7 +187,7 @@ describe('snake', function() {
 
     it('stamp multi-node snake', function() {
       var snake = [[0,0], [1,0], [2,0], [2,1]];
-      var matrix = Snake.genMatrix(3,3);
+      var matrix = utils.genMatrix(3,3);
       var actual = Snake.stampOnMatrix(snake, matrix);
       var expected = [
         [1,1,1],
@@ -203,7 +202,7 @@ describe('snake', function() {
       it('stamp the fruit on the matrix if passed', function() {
         var snake = [[0,0]];
         var fruit = [2,2];
-        var matrix = Snake.genMatrix(3,3);
+        var matrix = utils.genMatrix(3,3);
         var actual = Snake.stampOnMatrix(snake, matrix, fruit);
         var expected = [
           [1,0,0],

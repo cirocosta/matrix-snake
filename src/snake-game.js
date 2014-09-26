@@ -1,5 +1,21 @@
 'use strict';
 
+/**
+ * SnakeGame encapsulates the main game logic,
+ * i.e, the `prepare` high-order function and
+ * the CbObj object.
+ *
+ * `prepare` will generate a closure that
+ * contains all of the current game logic and
+ * state, returning a `next` method that
+ * corresponds to each iteration of the game.
+ *
+ * `CbObj` corresponds to an object that the
+ * developer must instantiate to enable emitting
+ * 'dir' events to the game through its
+ * `emitDir` method.
+ */
+
 var Snake = require('./snake-array');
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
@@ -42,16 +58,19 @@ function _randomCoord (w, h) {
 /**
  * Main execution loop. Holds state and logic
  * for processing moves.
- * @param {number} w [description]
- * @param {number} h [description]
+ * @param {number} w
+ * @param {number} h
  * @param {CbObj}
+ * @param {Function} onFruitEaten
+ * @param {Function} onCrash [description]
  */
-function prepare (w, h, cbObj, onFruitEaten) {
+function prepare (w, h, cbObj, onFruitEaten, onCrash) {
   var _INITIAL_MATRIX = Snake.genMatrix(w, h);
   var _snake = [[(Math.random() * w-1 | 0) + 1,
                 (Math.random() * h-1 | 0) + 1]];
   var _fruit = _randomCoord(w, h);
   var _fruits = 0;
+  var _crashed = false;
   var dir = [DIR.up, DIR.down, DIR.left, DIR.right][Math.random() * 4 | 0];
   var newDir = dir;
 
@@ -61,10 +80,16 @@ function prepare (w, h, cbObj, onFruitEaten) {
 
   return {
     next: function () {
+      if (crashed)
+        return stampOnMatrix(_snake, _INITIAL_MATRIX, _fruit);
+
       _snake = move(_snake, dir, newDir, w, h, _fruit, function () {
         _fruits++;
         _fruit = _randomCoord(w, h);
         onFruitEaten && onFruitEaten(_fruits);
+      }, function () {
+        crashed = true;
+        onCrash && onCrash();
       });
       newDir = newDir || dir;
       dir = newDir;
