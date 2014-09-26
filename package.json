@@ -21,6 +21,7 @@
     "webpack": "^1.4.2"
   },
   "dependencies": {
+    "keymaster": "^1.6.2",
     "react": "^0.11.2"
   }
 }

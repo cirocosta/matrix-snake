@@ -8,35 +8,67 @@ require('../bower_components/react-matrix/dist/react-matrix.css');
 
 var React = require('react/addons');
 var Matrix = require('../bower_components/react-matrix/dist/react-matrix');
-var update = React.addons.update;
-var INITIAL_MATRIX = [
-  [0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0],
-];
+var SnakeGame = require('./snake-game');
+var keymaster = require('keymaster');
+
+var _fruits = 0;
+var cbObj = new SnakeGame.CbObj();
+
+var handleFruitEat = function (fruits) {
+  _fruits = fruits;
+};
+
+keymaster('w,a,s,d', function (e, obj) {
+  switch (obj.shortcut) {
+    case 'w':
+    cbObj.emitDir('up');
+    break;
+    case 's':
+    cbObj.emitDir('down');
+    break;
+    case 'a':
+    cbObj.emitDir('left');
+    break;
+    case 'd':
+    cbObj.emitDir('right');
+    break;
+  }
+});
+
+var game = SnakeGame.prepare(10, 10, cbObj, handleFruitEat);
 
 var App = React.createClass({
+
   getInitialState () {
     return {
-      matrix: INITIAL_MATRIX
+      matrix: game.next()
     };
+  },
+
+  componentDidMount () {
+    setInterval(() => {
+      this.setState({
+        matrix: game.next()
+      });
+    }, 150);
+  },
+
+  handleKeyPress () {
+    console.log('wow');
   },
 
   render () {
     return (
-      <Matrix squareSize={20} matrix={this.state.matrix} />
+      <div onKeyPress={this.handleKeyPress}>
+        <Matrix squareSize={20} matrix={this.state.matrix} />
+      </div>
     );
   }
 });
 
 React.renderComponent(
   <App />,
-  document.getElementById('game')
+  document.body
 );
 
 window.React = React;
