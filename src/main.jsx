@@ -15,14 +15,22 @@ var keymaster = require('keymaster');
 var _fruits = 0;
 var cbObj = new SnakeGame.CbObj();
 
+var prettyMatrix = (arr) => {
+  var repr = [];
+
+  for (var i in arr)
+    repr.push(arr[i])
+
+  return repr.join('\n');
+};
+
 var handleFruitEat = (fruits) => {
   _fruits = fruits;
 };
 
 var handleCrash = () => {
   alert('Crash! Press refresh for playing again!');
-}
-
+};
 
 keymaster('w,a,s,d', function (e, obj) {
   switch (obj.shortcut) {
@@ -64,14 +72,11 @@ var App = React.createClass({
     this.gameTick();
   },
 
-  handleKeyPress () {
-    console.log('wow');
-  },
-
   render () {
     return (
-      <div onKeyPress={this.handleKeyPress}>
+      <div>
         <Matrix squareSize={20} matrix={this.state.matrix} />
+        <pre>{prettyMatrix(this.state.matrix)}</pre>
       </div>
     );
   }
