@@ -9,6 +9,7 @@
   "author": "Ciro S. Costa <ciro9758@gmail.com> (http://cirocosta.github.io/)",
   "license": "MIT",
   "devDependencies": {
+    "webpack": "^1.4.3",
     "mocha": "^1.21.4"
   }
 }

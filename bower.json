@@ -1,0 +1,16 @@
+{
+  "name": "matrix-snake",
+  "version": "0.0.1",
+  "homepage": "https://github.com/cirocosta/matrix-snake",
+  "authors": [
+    "Ciro S. Costa <ciro.costa@usp.br>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

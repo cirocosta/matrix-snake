@@ -1,6 +1,16 @@
 # matrix-snake
 
-> Play Snake Game in a Javascript Matrix!
+> Play Snake Game in a Javascript Matrix (browser-ready)!
+
+```sh
+$ npm install --save snake-matrix
+```
+
+or
+
+```sh
+$ bower install --save snake-matrix
+```
 
 ## Example
 
@@ -25,5 +35,4 @@ var game = SnakeGame.prepare(5,5, cbObj);
 setInterval(function () {
   console.log(game.next());
 }, 500);
-
 ```
