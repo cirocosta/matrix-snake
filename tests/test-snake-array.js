@@ -128,6 +128,35 @@ describe('snake', function() {
         assert.deepEqual(snake, [[1,0],[2,0],[2,1],[1,1],Snake.CRASH]);
       });
     });
+
+    describe('with fruits,', function() {
+      function spy () {
+        var count = 0;
+
+        return function () {
+          return count++;
+        };
+      }
+
+      it('call callback when fruit eaten', function() {
+        var spyFunc = spy();
+        var snake = [[0,0]];
+        var fruit = [1,0];
+
+        snake = move(snake, null, DIR.right, 3, 3, fruit, spyFunc);
+
+        assert.equal(spyFunc(), 1);
+      });
+
+      it('augment snake when fruit eaten', function() {
+        var snake = [[0,0]];
+        var fruit = [1,0];
+
+        snake = move(snake, null, DIR.right, 3, 3, fruit);
+
+        assert.deepEqual(snake, [[0,0], [1,0]]);
+      });
+    });
   });
 
   describe('genMatrix', function() {
@@ -169,6 +198,21 @@ describe('snake', function() {
 
       assert.deepEqual(actual, expected);
     });
-  });
 
+    describe('with fruits', function() {
+      it('stamp the fruit on the matrix if passed', function() {
+        var snake = [[0,0]];
+        var fruit = [2,2];
+        var matrix = Snake.genMatrix(3,3);
+        var actual = Snake.stampOnMatrix(snake, matrix, fruit);
+        var expected = [
+          [1,0,0],
+          [0,0,0],
+          [0,0,1],
+        ];
+
+        assert.deepEqual(actual, expected);
+      });
+    });
+  });
 });

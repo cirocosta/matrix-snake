@@ -35,6 +35,10 @@ CbObj.prototype.emitDir = function(dir) {
   this.emit('dir', this.directions[dI]);
 };
 
+function _randomCoord (w, h) {
+  return [Math.random()*w|0,Math.random()*h|0];
+}
+
 /**
  * Main execution loop. Holds state and logic
  * for processing moves.
@@ -42,11 +46,12 @@ CbObj.prototype.emitDir = function(dir) {
  * @param {number} h [description]
  * @param {CbObj}
  */
-function prepare (w, h, cbObj) {
-  var INITIAL_MATRIX = Snake.genMatrix(w, h);
-  var matrix;
-  var snake = [[(Math.random() * w-1 | 0) + 1,
+function prepare (w, h, cbObj, onFruitEaten) {
+  var _INITIAL_MATRIX = Snake.genMatrix(w, h);
+  var _snake = [[(Math.random() * w-1 | 0) + 1,
                 (Math.random() * h-1 | 0) + 1]];
+  var _fruit = _randomCoord(w, h);
+  var _fruits = 0;
   var dir = [DIR.up, DIR.down, DIR.left, DIR.right][Math.random() * 4 | 0];
   var newDir = dir;
 
@@ -56,11 +61,15 @@ function prepare (w, h, cbObj) {
 
   return {
     next: function () {
-      snake = move(snake, dir, newDir, w, h);
+      _snake = move(_snake, dir, newDir, w, h, _fruit, function () {
+        _fruits++;
+        _fruit = _randomCoord(w, h);
+        onFruitEaten && onFruitEaten(_fruits);
+      });
       newDir = newDir || dir;
       dir = newDir;
 
-      return stampOnMatrix(snake, INITIAL_MATRIX);
+      return stampOnMatrix(_snake, _INITIAL_MATRIX, _fruit);
     }
   };
 }
