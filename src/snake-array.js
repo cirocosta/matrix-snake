@@ -21,6 +21,7 @@
  * stampOnMatrix method).
  */
 
+var utils = require('./utils');
 
 /**
  * Constants
@@ -41,12 +42,6 @@ var DIR = {
 var CRASH = 'CRASHHHH!';
 
 /**
- * Private
- */
-
-var _slice = Function.prototype.call.bind(Array.prototype.slice);
-
-/**
  * Given the last direction and the new
  * direction (+ matrix width and height), get
  * the coordinates of the next position.
@@ -61,6 +56,9 @@ function _getNext (node, lastDir, newDir, w, h) {
   var next;
 
   newDir = newDir || lastDir;
+
+  if (OPPOSE[lastDir] === newDir)
+    newDir = lastDir;
 
   switch (newDir) {
     case DIR.right:
@@ -107,50 +105,10 @@ function _getNext (node, lastDir, newDir, w, h) {
 }
 
 /**
- * Deeply compares two arrays
- * @param  {array} arr1
- * @param  {array} arr2
- * @return {bool}
- */
-function _arraysEqual(arr1, arr2) {
-    if(arr1.length !== arr2.length)
-        return false;
-    for(var i = arr1.length; i--;)
-      if(arr1[i] !== arr2[i])
-        return false;
-
-  return true;
-}
-
-function _arrayIn (node, array) {
-  return array.some(function (elem) {
-    return _arraysEqual(node, elem) ? true : false;
-  });
-}
-
-/**
  * Public
  */
 
 
-/**
- * Generates a matrix given Width and Height
- * @param  {number} w
- * @param  {number} h
- * @return {array}
- */
-function genMatrix (w, h) {
-  var matrix = [];
-  var row = [];
-
-  while (w--)
-    row.push(0);
-
-  while (h--)
-    matrix.push(_slice(row));
-
-  return matrix;
-}
 
 /**
  * Given a snake and a direction, computs the
@@ -160,22 +118,21 @@ function genMatrix (w, h) {
  * @param  {string} newDir
  * @param {array} fruit coordinate of the current fruit
  */
-function move (snake, lastDir, newDir, w, h, fruit, onFruitEaten) {
-  var N = snake.length;
+function move (snake, lastDir, newDir, w, h, fruit, onFruitEaten, crashCallback) {
   var next;
   var newSnake;
   var fruitEaten = false;
 
-  newSnake = snake.map(function (node, i, arr) {
+  newSnake = snake.map(function (node, i) {
     if (snake[i+1])
       return snake[i+1];
 
-    next = _getNext(_slice(node), lastDir, newDir, w, h);
+    next = _getNext(utils.slice(node), lastDir, newDir, w, h);
 
-    if (_arrayIn(next, snake))
-      return CRASH;
+    if (utils.arrayIn(next, snake))
+      return (crashCallback && crashCallback(next), next);
 
-    if (fruit && _arraysEqual(fruit, next))
+    if (fruit && utils.arraysEqual(fruit, next))
       (fruitEaten = true, onFruitEaten && onFruitEaten());
 
     return next;
@@ -209,8 +166,6 @@ function stampOnMatrix (snake, matrix, fruit) {
 module.exports = {
   DIR: DIR,
   CRASH: CRASH,
-
-  genMatrix: genMatrix,
   stampOnMatrix: stampOnMatrix,
   move: move
 };
