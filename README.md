@@ -12,7 +12,21 @@ or
 $ bower install --save snake-matrix
 ```
 
+## SnakeGame
+
+`SnakeGame` will expose one method and an object: `prepare` and `CbObj`, respectively.
+
+### ::prepare(w, h, cbObj, onFruintEaten, onCrach)
+
+`prepares` return a `game`, which is an object with only one method: `next`. `next` is what will tick the game so that the next state is generated (collision is detected, as well as new positions).
+
+### ::cbObj
+
+`cbObj` is an emitter object which will signalize whenever a new direction should be handled by the game. It exposes only the `emitDir` method, which takes one string as its argument: `up`, `left`, `right` or `down`.
+
 ## Example
+
+Although this might seem a little bit complicated, this is how it works:
 
 ```javascript
 var SnakeGame = require('../src/snake-game');
@@ -36,3 +50,5 @@ setInterval(function () {
   console.log(game.next());
 }, 500);
 ```
+
+By letting the dev decide how to tick the game and decide on how to signalize a new direction we provide freedom to the way the dev wants to perform this things.

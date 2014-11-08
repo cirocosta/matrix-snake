@@ -1,6 +1,6 @@
 {
   "name": "matrix-snake",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Snake Game in a Javascript Matrix",
   "main": "./src/snake-game.js",
   "scripts": {
